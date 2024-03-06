@@ -1,1 +1,11 @@
-run: az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+jobs:
+  connect-to-azure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_SP_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_SP_TENANT_ID }}
+      - name: Run Azure commands using the authenticated identity
+        run: |
+          az resource list
