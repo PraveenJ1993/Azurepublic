@@ -1,15 +1,18 @@
-name: Azure Login Example
-
-on: [push]
-
+on: 
+      push:
+name: AzureLoginSample
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_FUNCTIONS_PUBLISH_PROFILE }}
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_FUNCTIONS_PUBLISH_PROFILE }}
+          auth-type: SERVICE_PRINCIPAL
+      - name: Create Resource Group
+        run: az group create --name TestSandbox11 --location eastus
