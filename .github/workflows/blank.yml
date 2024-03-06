@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main 
+
 jobs:
   connect-to-azure:
     runs-on: ubuntu-latest
     
+    steps:
       - name: Azure Login
         uses: Azure/login@v1
         with:
