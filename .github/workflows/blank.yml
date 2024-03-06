@@ -1,4 +1,4 @@
-name: Connect to Azure and List Resources
+name: Connect to Azure and List Resources (Secure)
 
 on:
   push:
@@ -10,12 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Azure Login
+      - uses: actions/checkout@v3  # Checkout the repository code
+
+      - name: Install Azure CLI (if not already installed)
+        uses: azure/cli@v2  # Install the Azure CLI (optional, adapt version if needed)
+        with:
+          azure-cli-version: '2.44.0'  # Example version, adjust as needed
+
+      - name: Azure Login using Managed Identity (if applicable)
+        # Uncomment if using Managed Identity, remove Azure/login step below
+        # uses: azure/login@v1
+        # with:
+        #   use-msi: true
+
+      - name: Azure Login using Service Principal (if not using Managed Identity)
         uses: Azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_SP_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_SP_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SP_SUBSCRIPTION_ID }}  # Corrected secret name
+
       - name: Run Azure commands using the authenticated identity
         run: |
           az resource list
